@@ -132,6 +132,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                     lista.add("Bradesco");
                     lista.add("Itau");
                     lista.add("Santander");
+                    lista.add("Banco do Brasil");
                     break;
                 }
                 case 2: {
