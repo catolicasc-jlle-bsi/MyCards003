@@ -21,6 +21,6 @@ public class Upload extends AsyncTask<Object, Void, Object> {
     }
 
     private boolean isNovoRegistro() {
-        return model.id != null;
+        return model.id == null;
     }
 }
