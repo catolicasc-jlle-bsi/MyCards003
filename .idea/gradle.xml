@@ -7,8 +7,13 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
+<<<<<<< HEAD
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+=======
+            <option value="C:\Users\Gabriel\my-cards-mobile" />
+            <option value="C:\Users\Gabriel\my-cards-mobile\app" />
+>>>>>>> 4260d40a86073757b5cf708d011f28676d7630cc
           </set>
         </option>
       </GradleProjectSettings>

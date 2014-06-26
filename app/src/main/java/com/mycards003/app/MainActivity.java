@@ -2,14 +2,12 @@ package com.mycards003.app;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,10 +16,15 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mycards.api.API;
+import com.mycards.business.Bank;
+import com.mycards.business.Card;
+import com.mycards.business.Flag;
+import com.mycards.business.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,40 +127,29 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 }
             });
 
-            List<String> lista = new ArrayList<String>();
-
-            //Utilizar a rotina abaixo para popular a lista selecionada.
+            List<Model> lista = new ArrayList<Model>();
+            DownloadWebPageTask task = new DownloadWebPageTask();
             switch (posicao) {
                 case 1 : {
                     lista.add("Bradesco");
                     lista.add("Itau");
                     lista.add("Santander");
                     lista.add("Banco do Brasil");
+
+                    //task.execute(lista, new Bank(), getActivity(), rootView);
+
                     break;
                 }
                 case 2: {
-                    lista.add("Visa");
-                    lista.add("Mastercard");
+                    task.execute(lista, new Flag(), getActivity(), rootView);
                     break;
                 }
                 case 3: {
-                    lista.add("Joaquim Visa");
-                    lista.add("Joaquim Mastercard");
-                    lista.add("João Visa");
-                    lista.add("João Mastercard");
-                    lista.add("José Visa");
-                    lista.add("José Mastercard");
-                    lista.add("Maria Visa");
-                    lista.add("Maria Mastercard");
-                    lista.add("Pedro Visa");
-                    lista.add("Pedro Mastercard");
-                    lista.add("Paulo Visa");
-                    lista.add("Paulo Mastercard");
+                    task.execute(lista, new Card(), getActivity(), rootView);
                     break;
                 }
             }
-            ArrayAdapter<String> arrayAdapter;
-            arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,lista);
+            ArrayAdapter<Model> arrayAdapter = new ArrayAdapter<Model>(getActivity(), android.R.layout.simple_list_item_1, lista);
 
             lv.setAdapter(arrayAdapter);
             return rootView;
@@ -169,8 +161,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             try {
                 Intent intent = new Intent(getActivity(), CadActivity.class);
                 ListView lv = (ListView)getActivity().findViewById(R.id.listView);
-                String nome = lv.getItemAtPosition(position_list).toString();
-                Parametros.getInstance().nm_banco = nome;
+                Model model = (Model) lv.getItemAtPosition(position_list);
+                Parametros.getInstance().model = model;
                 switch (position) {
                     case 1: {
                         intent = new Intent(getActivity(), CadBancoActivity.class);
@@ -197,6 +189,33 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             super.onAttach(activity);
             ((MainActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
+        }
+    }
+
+    private static class DownloadWebPageTask extends AsyncTask<Object, Void, Object> {
+        private Activity activity;
+        private View rootView;
+
+        @Override
+        protected Object doInBackground(Object... objects) {
+            List<Model> list = (List<Model>) objects[0];
+            Model model = (Model) objects[1];
+            this.activity = (Activity) objects[2];
+            this.rootView = (View) objects[3];
+            try {
+                list.addAll(new API(model).list());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return list;
+        }
+
+        @Override
+        protected void onPostExecute(Object result) {
+            ListView lv = (ListView)rootView.findViewById(R.id.listView);
+            ArrayAdapter<Model> arrayAdapter = new ArrayAdapter<Model>(activity, android.R.layout.simple_list_item_1, (List<Model>) result);
+            lv.setAdapter(arrayAdapter);
         }
     }
 

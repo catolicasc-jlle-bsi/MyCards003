@@ -7,10 +7,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import java.nio.charset.Charset;
+import com.mycards.api.Upload;
+import com.mycards.business.Card;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ import java.util.List;
 public class CadCartaoActivity extends Activity {
 
     private Button btn;
+    private Card card;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +35,13 @@ public class CadCartaoActivity extends Activity {
     protected void onStart() {
         super.onStart();
         btn = (Button)findViewById(R.id.btnCadastro);
+        card = (Card) Parametros.getInstance().model;
+
         EditText edNome = (EditText)this.findViewById(R.id.etNome);
-        edNome.setText(Parametros.getInstance().nm_banco);
+        edNome.setText(card.name);
         btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                salvar_e_sair();
+                salvarESair();
             }
         });
 
@@ -63,13 +68,16 @@ public class CadCartaoActivity extends Activity {
         }
 
     }
-    private void salvar_e_sair() {
+
+    private void salvarESair() {
+
         try {
             EditText edNome = (EditText)this.findViewById(R.id.etNome);
             if (edNome.getText().toString().trim().equals("")) {
                 edNome.requestFocus();
                 throw new Exception("Informe o nome do Cartão");
             }
+            //new Upload().execute(card);
 
             Toast.makeText(this, "Cartão salvo com sucesso", Toast.LENGTH_SHORT).show();
             finalizar();
@@ -82,5 +90,4 @@ public class CadCartaoActivity extends Activity {
     private void finalizar() {
         this.finish();
     }
-
 }
