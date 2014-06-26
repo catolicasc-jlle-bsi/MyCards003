@@ -196,25 +196,23 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
         @Override
         protected Object doInBackground(Object... objects) {
-            List<Model> lista = (List<Model>) objects[0];
+            List<Model> list = (List<Model>) objects[0];
+            Model model = (Model) objects[1];
+            this.activity = (Activity) objects[2];
+            this.rootView = (View) objects[3];
             try {
-                List<Model> models = (List<Model>) new API((Model) objects[1]).list();
-                for (Model m : models) {
-                    lista.add(m);
-                }
+                list.addAll(new API(model).list());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            this.activity = (Activity) objects[2];
-            this.rootView = (View) objects[3];
-            return lista;
+
+            return list;
         }
 
         @Override
         protected void onPostExecute(Object result) {
             ListView lv = (ListView)rootView.findViewById(R.id.listView);
             ArrayAdapter<Model> arrayAdapter = new ArrayAdapter<Model>(activity, android.R.layout.simple_list_item_1, (List<Model>) result);
-
             lv.setAdapter(arrayAdapter);
         }
     }
