@@ -7,8 +7,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,21 +20,18 @@ import java.util.List;
 public class CadCartaoActivity extends Activity {
 
     private Button btn;
-    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_cad_bandeira);
-
-        btn = (Button)findViewById(R.id.btnCadastro);
-        spinner = (Spinner)findViewById(R.id.spinner);
+        setContentView(R.layout.activity_cad_cartao);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        btn = (Button)findViewById(R.id.btnCadastro);
         EditText edNome = (EditText)this.findViewById(R.id.etNome);
         edNome.setText(Parametros.getInstance().nm_banco);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -40,27 +39,39 @@ public class CadCartaoActivity extends Activity {
                 salvar_e_sair();
             }
         });
-/*
-        List<String> lista = new ArrayList<String>();
+
+        Spinner spinner = (Spinner)findViewById(R.id.spinner_banco);
+        List<CharSequence> lista = new ArrayList<CharSequence>();
         lista.add("Bradesco");
         lista.add("Itau");
         lista.add("Santander");
+        ArrayAdapter<CharSequence> arrayAdapter;
+        arrayAdapter = new ArrayAdapter<CharSequence>(this,android.R.layout.simple_spinner_dropdown_item,lista);
+        //arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        if (spinner != null) {
+            spinner.setAdapter(arrayAdapter);
+        }
 
-        ArrayAdapter<String> arrayAdapter;
-        arrayAdapter = new ArrayAdapter.createFromResource(this, lista, androidR.layout.simple) ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,lista);
+        Spinner spinnerBandeira = (Spinner)findViewById(R.id.spinner_bandeira);
+        lista = new ArrayList<CharSequence>();
+        lista.add("Visa");
+        lista.add("Mastercard");
+        arrayAdapter = new ArrayAdapter<CharSequence>(this,android.R.layout.simple_spinner_dropdown_item,lista);
+        //arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        if (spinnerBandeira != null) {
+            spinnerBandeira.setAdapter(arrayAdapter);
+        }
 
-        spinner.setAdapter(arrayAdapter);*/
     }
-
     private void salvar_e_sair() {
         try {
             EditText edNome = (EditText)this.findViewById(R.id.etNome);
             if (edNome.getText().toString().trim().equals("")) {
                 edNome.requestFocus();
-                throw new Exception("Informe o nome da bandeira");
+                throw new Exception("Informe o nome do Cartão");
             }
 
-            Toast.makeText(this, "Bandeira salva com sucesso", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cartão salvo com sucesso", Toast.LENGTH_SHORT).show();
             finalizar();
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();

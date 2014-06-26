@@ -20,6 +20,20 @@
         android:text="Banco"
         android:id="@+id/tvBanco"/>
 
+    <Spinner
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_banco"
+        android:prompt="@string/title_section1"/>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Bandeira"
+        android:id="@+id/tvBandeira"/>
+    <Spinner
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_bandeira"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -27,9 +41,4 @@
         android:text="Cadastrar"
         android:id="@+id/btnCadastro"
         android:layout_gravity="right" />
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner" />
 </LinearLayout>
