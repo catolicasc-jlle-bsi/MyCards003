@@ -1,7 +1,6 @@
 package com.mycards.business;
 
 public class Bank extends Model {
-    public Long id;
     public String code;
     public String description;
 
@@ -11,12 +10,8 @@ public class Bank extends Model {
     }
 
     @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
     public String toString() {
-        return description;
+        return code + "\n" +
+                description;
     }
 }

@@ -9,6 +9,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.mycards.api.Upload;
+import com.mycards.business.Card;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +22,7 @@ public class CadCartaoActivity extends Activity {
 
     private Button btn;
     private Spinner spinner;
+    private Card card;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +37,13 @@ public class CadCartaoActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
+        card = (Card) Parametros.getInstance().model;
+
         EditText edNome = (EditText)this.findViewById(R.id.etNome);
-        edNome.setText(Parametros.getInstance().nm_banco);
+        edNome.setText(card.name);
         btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                salvar_e_sair();
+                salvarESair();
             }
         });
 /*
@@ -52,7 +58,7 @@ public class CadCartaoActivity extends Activity {
         spinner.setAdapter(arrayAdapter);*/
     }
 
-    private void salvar_e_sair() {
+    private void salvarESair() {
         try {
             EditText edNome = (EditText)this.findViewById(R.id.etNome);
             if (edNome.getText().toString().trim().equals("")) {
@@ -60,7 +66,9 @@ public class CadCartaoActivity extends Activity {
                 throw new Exception("Informe o nome da bandeira");
             }
 
-            Toast.makeText(this, "Bandeira salva com sucesso", Toast.LENGTH_SHORT).show();
+            new Upload().execute(card);
+
+            Toast.makeText(this, "Cartão salvo com sucesso", Toast.LENGTH_SHORT).show();
             finalizar();
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -71,5 +79,4 @@ public class CadCartaoActivity extends Activity {
     private void finalizar() {
         this.finish();
     }
-
 }

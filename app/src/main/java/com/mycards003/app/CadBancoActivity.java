@@ -1,14 +1,14 @@
 package com.mycards003.app;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.mycards.api.Upload;
+import com.mycards.business.Bank;
 
 /**
  * Created by Renan on 25/06/14.
@@ -16,6 +16,7 @@ import android.widget.Toast;
 public class CadBancoActivity extends Activity {
 
     private Button btn;
+    private Bank bank;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,16 +31,23 @@ public class CadBancoActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        bank = (Bank) Parametros.getInstance().model;
+
         EditText edNome = (EditText)this.findViewById(R.id.etNome);
-        edNome.setText(Parametros.getInstance().nm_banco);
+        edNome.setText(bank.description);
+
+        EditText edFenaban = (EditText)this.findViewById(R.id.etFenaban);
+        edFenaban.setText(bank.code);
+
         btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                salvar_e_sair();
+                salvarESair();
             }
         });
     }
 
-    private void salvar_e_sair() {
+    private void salvarESair() {
         try {
             EditText edNome = (EditText)this.findViewById(R.id.etNome);
             if (edNome.getText().toString().trim().equals("")) {
@@ -53,6 +61,11 @@ public class CadBancoActivity extends Activity {
                 throw new Exception("Informe o código Fenaban");
             }
 
+            bank.description = edNome.getText().toString();
+            bank.code = edFenaban.getText().toString();
+
+            new Upload().execute(bank);
+
             Toast.makeText(this, "Banco salvo com sucesso", Toast.LENGTH_SHORT).show();
             finalizar();
         } catch (Exception e) {
@@ -64,5 +77,4 @@ public class CadBancoActivity extends Activity {
     private void finalizar() {
         this.finish();
     }
-
 }

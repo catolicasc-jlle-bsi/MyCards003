@@ -4,7 +4,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Card extends Model {
-    public Long id;
     public String name;
     public String cardName;
     public String cardNumber;
@@ -19,22 +18,24 @@ public class Card extends Model {
     public Card(Long id) { this.id = id; }
 
     @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public JSONObject toJson() throws JSONException, IllegalAccessException {
+    public JSONObject toJson() {
         JSONObject jsonObject = super.toJson();
-
-        jsonObject.accumulate("bank", bank.toJson());
-        jsonObject.accumulate("flag", flag.toJson());
-
+        try {
+            if (bank != null) {
+                jsonObject.accumulate("bank", bank.toJson());
+            }
+            if (flag != null) {
+                jsonObject.accumulate("flag", flag.toJson());
+            }
+        } catch (Exception e) {}
         return jsonObject;
     }
 
     @Override
     public String toString() {
-        return cardName;
+        return name + "\n" +
+                cardName + "\n" +
+                cardNumber + "\n" +
+                dateValidatedMounth + "/" + dateValidatedYear;
     }
 }

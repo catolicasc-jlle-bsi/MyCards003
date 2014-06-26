@@ -7,10 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,12 +16,11 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mycards.business.API;
+import com.mycards.api.API;
 import com.mycards.business.Bank;
 import com.mycards.business.Card;
 import com.mycards.business.Flag;
@@ -159,8 +155,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             try {
                 Intent intent = new Intent(getActivity(), CadActivity.class);
                 ListView lv = (ListView)getActivity().findViewById(R.id.listView);
-                String nome = lv.getItemAtPosition(position_list).toString();
-                Parametros.getInstance().nm_banco = nome;
+                Model model = (Model) lv.getItemAtPosition(position_list);
+                Parametros.getInstance().model = model;
                 switch (position) {
                     case 1: {
                         intent = new Intent(getActivity(), CadBancoActivity.class);

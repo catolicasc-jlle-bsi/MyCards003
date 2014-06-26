@@ -7,12 +7,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.mycards.api.Upload;
+import com.mycards.business.Flag;
+
 /**
  * Created by Renan on 25/06/14.
  */
 public class CadBandeiraActivity extends Activity {
 
     private Button btn;
+    private Flag flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,22 +31,28 @@ public class CadBandeiraActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        flag = (Flag) Parametros.getInstance().model;
+
         EditText edNome = (EditText)this.findViewById(R.id.etNome);
-        edNome.setText(Parametros.getInstance().nm_banco);
+        edNome.setText(flag.description);
+
         btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                salvar_e_sair();
+                salvarESair();
             }
         });
     }
 
-    private void salvar_e_sair() {
+    private void salvarESair() {
         try {
             EditText edNome = (EditText)this.findViewById(R.id.etNome);
             if (edNome.getText().toString().trim().equals("")) {
                 edNome.requestFocus();
                 throw new Exception("Informe o nome da bandeira");
             }
+
+            new Upload().execute(flag);
 
             Toast.makeText(this, "Bandeira salva com sucesso", Toast.LENGTH_SHORT).show();
             finalizar();
